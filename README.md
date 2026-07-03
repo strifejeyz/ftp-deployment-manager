@@ -1,71 +1,63 @@
-# 🚀 Portside (FTP/SFTP Deployment Manager)
+# 🚀 FTP Deployment Manager
 
-Portside is a modern, lightweight, web-based deployment manager designed to easily synchronize local project files and directories to remote servers via FTP or SFTP. 
+The **FTP Deployment Manager** is a standalone, lightweight, web-based tool designed to easily synchronize local project files and directories to remote servers via FTP or SFTP. 
 
-It provides an intuitive web interface to manage server configurations, specify deployment mappings, and stream real-time logs during the deployment process.
-
----
-
-## ✨ Features
-
-- **Multi-Protocol Support**: Deploy files securely via **SFTP** or standard **FTP**.
-- **Real-Time Deployment Logs**: Watch your deployment progress file-by-file with live-streaming updates.
-- **Directory & File Mappings**: Configure exactly which local files/folders map to which remote destinations.
-- **Workspace File Scanner**: Browse and select local files/directories directly within the app interface.
-- **Server Profiles**: Store multiple target server configurations (development, staging, production) and deploy to one or many simultaneously.
+Once compiled into a standalone executable (`deploy.exe`), you can drop it into any project folder. Running it launches a local dashboard that allows you to manage server credentials, map files and folders, and deploy them with real-time feedback.
 
 ---
 
 ## 🛠️ How It Works
 
-Portside runs as a local lightweight backend server (Express.js) that hosts the frontend control panel and coordinates the file transfer protocols.
+This tool is designed to run in a portable fashion directly inside the project directory you want to deploy:
+
+1. **Standalone Executable**: The project uses `pkg` to package the Node.js runtime, Express backend, and Frontend HTML/JS into a single binary (`deploy.exe`).
+2. **Local Server & UI**: Running `deploy.exe` starts a local server on port `3000` and automatically opens a browser dashboard.
+3. **Project Context**: The executable uses its current working directory (CWD) as the source path for files, making it fully portable. You configure credentials and file mappings, which are saved locally in a `deploy-config.json` file inside your project.
 
 ```mermaid
 graph TD
-    A[Frontend Dashboard] <-->|API Calls & SSE| B[Express.js Local Server]
-    B -->|Read / Write| C[(deploy-config.json)]
-    B -->|FTP / SFTP Client| D[Remote Target Servers]
+    A[Your Project Folder] -->|Contains| B(deploy.exe)
+    B -->|Generates / Reads| C(deploy-config.json)
+    B -->|Launches| D[Local Dashboard http://localhost:3000]
+    D -->|Deploy Command| B
+    B -->|Uploads via SFTP / FTP| E[Remote Servers]
 ```
-
-### 1. The Configuration (`deploy-config.json`)
-The application stores server credentials and target mappings in a local JSON config file:
-- **`servers`**: Defines server connections (host, user, port, protocol, destination folder).
-- **`deployments`**: Specifies which local paths (files or directories) should map to which remote destinations.
-
-### 2. The Deployment Pipeline
-- When you click **Deploy**, the frontend issues a `POST` request to `/api/deploy`.
-- The Express server connects to each selected remote server sequentially.
-- Using active FTP/SFTP clients, the server automatically creates any missing directory paths on the remote end and uploads files.
-- Log events are continuously sent back using chunked HTTP transfer streaming, so you see exactly what's happening live.
 
 ---
 
-## 🚀 Getting Started
+## 📦 Building the Executable
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v16 or higher recommended)
+To compile the standalone `deploy.exe` file:
 
-### Installation
-
-1. Clone or copy the project files to your computer.
-2. Install the necessary dependencies:
+1. Clone or copy the project files to your local environment.
+2. Install the build dependencies:
    ```bash
    npm install
    ```
+3. Run the packaging script:
+   ```bash
+   npm run build-exe
+   ```
 
-### Running the App
-
-Start the local development server:
-```bash
-npm start
-```
-The application will automatically start running at `http://localhost:3000` and open in your default browser.
+This generates a standalone `deploy.exe` binary in the root directory.
 
 ---
 
-## 📝 Configuration Schema
+## 🚀 How to Use the Executable
 
-The config structure is defined as follows:
+1. **Copy** the generated `deploy.exe` file and drop it into the root of any project you want to manage deployments for.
+2. **Double-click** `deploy.exe` (or run it via cmd/powershell).
+3. A local server will start and open `http://localhost:3000` in your web browser.
+4. **Configure Mappings & Servers**:
+   - Add your remote FTP or SFTP connection credentials.
+   - Select the files/folders in your project you want to map to remote directories.
+5. **Deploy**: Select your target server, choose the mappings you want to upload, and click **Deploy** to stream the logs and watch the upload in real time.
+
+---
+
+## 📝 Saved Configurations (`deploy-config.json`)
+
+Your server configurations and file mappings are saved inside the target project directory under `deploy-config.json`:
 
 ```json
 {
@@ -93,3 +85,5 @@ The config structure is defined as follows:
   ]
 }
 ```
+> [!WARNING]
+> Keep your `deploy-config.json` secure and add it to your project's `.gitignore` file to ensure you don't accidentally commit server passwords.
