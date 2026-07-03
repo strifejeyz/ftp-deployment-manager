@@ -1,0 +1,4 @@
+node_modules/
+deploy.exe
+deploy
+.DS_Store

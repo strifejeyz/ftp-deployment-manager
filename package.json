@@ -1,0 +1,29 @@
+{
+  "name": "portable-deployer-tool",
+  "version": "1.0.0",
+  "description": "Standalone FTP/SFTP deployment tool with a local browser UI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build-exe": "pkg . --targets node18-win-x64 --output deploy.exe"
+  },
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      "index.html"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ]
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "open": "^10.1.0",
+    "ssh2-sftp-client": "^10.0.3"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
+}
