@@ -2,7 +2,13 @@
 
 The **FTP Deployment Manager** is a standalone, lightweight, web-based tool designed to easily synchronize local project files and directories to remote servers via FTP or SFTP. 
 
-Once compiled into a standalone executable (`deploy.exe`), you can drop it into any project folder. Running it launches a local dashboard that allows you to manage server credentials, map files and folders, and deploy them with real-time feedback.
+### 📦 Portable "Drop-In" Workflow
+Simply build the project once to produce the standalone executable (`deploy.exe`). 
+
+Whenever you want to deploy a project:
+1. **Drop** `deploy.exe` into the root of that project.
+2. **Run it** (by double-clicking).
+3. It instantly launches a local web server and **automatically opens your web browser**, allowing you to bind files/folders to upload and manage your FTP/SFTP server credentials.
 
 ---
 
@@ -11,8 +17,8 @@ Once compiled into a standalone executable (`deploy.exe`), you can drop it into 
 This tool is designed to run in a portable fashion directly inside the project directory you want to deploy:
 
 1. **Standalone Executable**: The project uses `pkg` to package the Node.js runtime, Express backend, and Frontend HTML/JS into a single binary (`deploy.exe`).
-2. **Local Server & UI**: Running `deploy.exe` starts a local server on port `3000` and automatically opens a browser dashboard.
-3. **Project Context**: The executable uses its current working directory (CWD) as the source path for files, making it fully portable. You configure credentials and file mappings, which are saved locally in a `deploy-config.json` file inside your project.
+2. **Auto-Launch Local Dashboard**: Running `deploy.exe` starts a local server on port `3000` and automatically opens a browser dashboard pointing to it.
+3. **Project Context**: The executable uses its current working directory (CWD) as the source path for files. Any file mappings or credentials you configure are saved locally in a `deploy-config.json` file inside your project.
 
 ```mermaid
 graph TD
